@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 22, 2022 at 05:24 PM
+-- Generation Time: Aug 23, 2022 at 05:25 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -66,6 +66,7 @@ CREATE TABLE `comments` (
 --
 
 INSERT INTO `comments` (`id`, `user_id`, `post_id`, `parent_id`, `body`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(4, 4, 1, NULL, 'aaa', '2022-08-12 01:39:53', '2022-08-12 01:39:53', NULL),
 (5, 4, 2, NULL, 'Hi my bro', '2022-08-21 03:42:09', '2022-08-21 03:42:09', NULL);
 
 -- --------------------------------------------------------
@@ -104,8 +105,8 @@ CREATE TABLE `groups` (
 --
 
 INSERT INTO `groups` (`id`, `name`, `code`, `admin_id`, `created_at`, `updated_at`) VALUES
-(1, 'Tourists', 'ToULxDY', 4, '2022-08-21 03:42:21', '2022-08-22 05:59:04'),
-(5, 'Tourists', 'fK7CeMs', 25, '2022-08-22 06:12:43', '2022-08-22 06:12:43');
+(1, 'Tourist', 'ToULxDY', 4, '2022-08-21 03:42:21', '2022-08-21 03:42:21'),
+(2, 'Batu Pahat', 'cbars7E', 25, '2022-08-21 04:06:59', '2022-08-22 09:33:53');
 
 -- --------------------------------------------------------
 
@@ -127,8 +128,8 @@ CREATE TABLE `group_participants` (
 
 INSERT INTO `group_participants` (`id`, `group_id`, `user_id`, `created_at`, `updated_at`) VALUES
 (1, 1, 4, NULL, NULL),
-(13, 5, 25, NULL, NULL),
-(16, 1, 25, NULL, NULL);
+(2, 2, 25, NULL, NULL),
+(3, 1, 25, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -147,6 +148,13 @@ CREATE TABLE `messages` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`id`, `user_id`, `group_id`, `from`, `name`, `is_read`, `message`, `created_at`, `updated_at`) VALUES
+(8, 25, 2, '25', 'Lee', '1', 'Hi', '2022-08-22 10:06:25', '2022-08-22 10:06:56');
 
 -- --------------------------------------------------------
 
@@ -177,7 +185,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (10, '2022_08_19_064903_create_groups_table', 6),
 (11, '2022_08_19_065849_create_group_participants_table', 6),
 (12, '2022_08_19_070230_create_messages_table', 6),
-(13, '2022_08_21_080854_create_post_users_table', 6);
+(13, '2022_08_21_080854_create_post_users_table', 6),
+(14, '2022_08_21_195201_create_points_table', 7),
+(15, '2022_08_22_004933_create_points_table', 8);
 
 -- --------------------------------------------------------
 
@@ -290,6 +300,23 @@ INSERT INTO `places` (`id`, `name`, `introduction`, `nearByArea`, `reviews`, `op
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `points`
+--
+
+CREATE TABLE `points` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `amount` int(11) NOT NULL,
+  `message` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `current_points` int(10) UNSIGNED NOT NULL,
+  `pointable_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pointable_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `posts`
 --
 
@@ -309,7 +336,8 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`id`, `slug`, `title`, `description`, `image_path`, `created_at`, `updated_at`, `user_id`) VALUES
-(2, 'nice-place', 'Nice Place', 'This place is very good and beautiful', '630219fac1ff2-Nice Place.jpg', '2022-08-21 03:41:46', '2022-08-21 03:41:46', 4);
+(2, 'nice-place', 'Nice Place', 'This place is very good and beautiful', '630219fac1ff2-Nice Place.jpg', '2022-08-21 03:41:46', '2022-08-21 03:41:46', 4),
+(5, 'ddx', 'ddx', 'dcxw', '6302d76d27ccf-ddx.jpg', '2022-08-21 17:10:05', '2022-08-21 17:10:05', 4);
 
 -- --------------------------------------------------------
 
@@ -331,7 +359,7 @@ CREATE TABLE `post_user` (
 
 INSERT INTO `post_user` (`id`, `post_id`, `user_id`, `created_at`, `updated_at`) VALUES
 (1, 2, 25, '2022-08-21 04:06:50', '2022-08-21 04:06:50'),
-(2, 2, 4, '2022-08-22 05:46:23', '2022-08-22 05:46:23');
+(8, 2, 4, '2022-08-21 16:33:25', '2022-08-21 16:33:25');
 
 -- --------------------------------------------------------
 
@@ -438,6 +466,13 @@ ALTER TABLE `places`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `points`
+--
+ALTER TABLE `points`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `points_pointable_type_pointable_id_index` (`pointable_type`,`pointable_id`);
+
+--
 -- Indexes for table `posts`
 --
 ALTER TABLE `posts`
@@ -471,7 +506,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -483,25 +518,25 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `group_participants`
 --
 ALTER TABLE `group_participants`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -516,16 +551,22 @@ ALTER TABLE `places`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=257;
 
 --
+-- AUTO_INCREMENT for table `points`
+--
+ALTER TABLE `points`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `post_user`
 --
 ALTER TABLE `post_user`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`

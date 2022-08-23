@@ -5,6 +5,7 @@
  {
     height: 100%;
 }
+
 #intro
 {
     background: url("https://cdn.dribbble.com/users/795597/screenshots/3569676/travel-planning__1_.gif")no-repeat center center fixed;
@@ -50,9 +51,11 @@ body {
   font-family: Arial;
   font-size:17px;
 }
+
 * {
   box-sizing: border-box;
 }
+
 form.example input[type=text] {
   padding: 10px;
   font-size: 15.34px;
@@ -61,6 +64,7 @@ form.example input[type=text] {
   width: 80%;
   background: white;
 }
+
 form.example button {
   float: left;
   width: 20%;
@@ -72,9 +76,11 @@ form.example button {
   border-left: none;
   cursor: pointer;
 }
+
 form.example button:hover {
   background: grey;
 }
+
 form.example::after {
   content: "";
   clear: both;
